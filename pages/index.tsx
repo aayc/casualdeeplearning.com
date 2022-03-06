@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import NavBar from "../components/NavBar";
@@ -7,7 +6,25 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const Home: NextPage = () => {
+type PostMetadata = {
+  title: string;
+  author: string;
+  date: string;
+  topic: string;
+  id: string;
+  tags: string[];
+  thumbnailUrl: string;
+  description: string;
+  level: number;
+};
+
+type HomePageProps = {
+  posts: { metadata: PostMetadata; slug: string }[];
+};
+
+const Home = (props: HomePageProps) => {
+  const topics = [...new Set(props.posts.map((x) => x.metadata.topic))];
+
   return (
     <div className={styles.container}>
       <Head>
@@ -32,42 +49,25 @@ const Home: NextPage = () => {
         <div className="text-center text-3xl mt-8">Get started by topic</div>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Natural Language Processing (NLP)</h2>
-            <ul>
-              <li>
-                <p className="text-blue-400">Tokenization &rarr;</p>
-              </li>
-            </ul>
-          </a>
-
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          {topics.map((topic) => (
+            <a href={`/`} className={styles.card}>
+              <h2>{topic}</h2>
+              <ul>
+                {props.posts
+                  .filter(
+                    (post) =>
+                      post.metadata.topic === topic && post.metadata.level == 1
+                  )
+                  .map((post) => (
+                    <li>
+                      <a className="text-blue-400" href={`/${post.slug}`}>
+                        {post.metadata.title} &rarr;
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </a>
+          ))}
         </div>
       </div>
     </div>
@@ -81,11 +81,10 @@ export const getStaticProps = async () => {
       path.join("posts", filename),
       "utf-8"
     );
-    const { data: frontMatter, content: pageContent } =
-      matter(markdownWithMeta);
+    const { data: metadata } = matter(markdownWithMeta);
     return {
-      frontMatter,
-      slug: filename.split(".")[0],
+      metadata,
+      slug: path.join("posts", filename.split(".")[0]),
     };
   });
   return {

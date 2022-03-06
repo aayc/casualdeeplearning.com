@@ -1,0 +1,49 @@
+---
+title: Tokenizers
+date: March 5, 2022
+author: Aaron Chan
+description: How do you use tokenizers?
+level: 2
+topic: Natural Language Processing
+id: tokenization
+thumbnailUrl: "/javascript-functions-thumbnail.jpeg"
+tags: ["nlp", "tokenizers", "level 2"]
+---
+
+_Unfortunately I only know PyTorch and Fairseq so that is what I will use for the examples._
+
+## Using a pretrained tokenizer
+
+Most people, especially when starting out, use pretrained models such as GPT-2 or RoBERTa to accomplish their tasks. If that's you, then you'll be using a pretrained tokenizer as well. Models and tokenizers are a package deal - if you want to use Huggingface's RoBERTa model, then you'll get best results if you use HuggingFace RoBERTa tokenizer it was trained with.
+
+<br />
+However, if you want to use Huggingface RoBERTa tokenizer to train a new model, that's
+totally fine. Here is how you would do that in PyTorch.
+
+<SyntaxHighlighter language="python">
+  {`
+    > import torch
+    > from huggingface import RobertaTokenizer
+
+    > tokenizer = RobertaTokenizer.from_pretrained("microsoft/roberta-base")
+    > tokens = tokenizer.tokenize("this is a car")
+
+    > encoded = tokenizer.encode("this is a car")
+
+    > decoded = tokenizer.decode(encoded)
+
+`}
+
+</SyntaxHighlighter>
+
+<SyntaxHighlighter language="python">
+  {`
+    []
+    `}
+</SyntaxHighlighter>
+
+## How do I batch multiple sequences?
+
+## Adding additional special tokens
+
+# Training a tokenizer

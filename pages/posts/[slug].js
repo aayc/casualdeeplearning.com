@@ -1,45 +1,68 @@
-import { serialize } from 'next-mdx-remote/serialize'
-import { MDXRemote } from 'next-mdx-remote'
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
-import SyntaxHighlighter from 'react-syntax-highlighter'
+import { serialize } from "next-mdx-remote/serialize";
+import { MDXRemote } from "next-mdx-remote";
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import Footer from "../../components/Footer";
+import NavBar from "../../components/NavBar";
+import styles from "../../styles/Post.module.css";
 
 export const getStaticPaths = async () => {
-  const files = fs.readdirSync(path.join('posts'))
-  const paths = files.map(filename => ({
+  const files = fs.readdirSync(path.join("posts"));
+  const paths = files.map((filename) => ({
     params: {
-      slug: filename.replace('.mdx', '')
-    }
-  }))
+      slug: filename.replace(".mdx", ""),
+    },
+  }));
   return {
     paths,
-    fallback: false
-  }
-}
+    fallback: false,
+  };
+};
 
 export const getStaticProps = async ({ params: { slug } }) => {
-  const markdownWithMeta = fs.readFileSync(path.join('posts',
-    slug + '.mdx'), 'utf-8')
-  const { data: frontMatter, content } = matter(markdownWithMeta)
-  const mdxSource = await serialize(content)
+  const markdownWithMeta = fs.readFileSync(
+    path.join("posts", slug + ".mdx"),
+    "utf-8"
+  );
+  const { data: frontMatter, content } = matter(markdownWithMeta);
+  const mdxSource = await serialize(content);
   return {
     props: {
       frontMatter,
       slug,
-      mdxSource
-    }
-  }
-}
+      mdxSource,
+    },
+  };
+};
 
-const PostPage = ({ frontMatter: { title, date, tags }, mdxSource }) => {
-  console.log(tags)
+const PostPage = ({
+  frontMatter: { title, author, date, description, tags },
+  mdxSource,
+}) => {
   return (
-    <div className="mt-4">
-      <h1>{title}</h1>
-      <MDXRemote {...mdxSource} components={{ SyntaxHighlighter }} />
+    <div>
+      <div className="m-auto max-w-6xl">
+        <NavBar></NavBar>
+        <div className={`m-auto max-w-3xl ${styles.post}`}>
+          <h1 className="mt-8">{title}</h1>
+          <p className="mt-2">
+            <i>
+              {author}, {date}
+            </i>
+          </p>
+          <p className="mt-2">
+            <i>{description}</i>
+          </p>
+          <div className={`my-8`}>
+            <MDXRemote {...mdxSource} components={{ SyntaxHighlighter }} />
+          </div>
+        </div>
+      </div>
+      <Footer></Footer>
     </div>
-  )
-}
+  );
+};
 
-export default PostPage
+export default PostPage;
