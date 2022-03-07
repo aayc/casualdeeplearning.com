@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import Footer from "../../components/Footer";
+import PostFooter from "../../components/PostFooter";
 import NavBar from "../../components/NavBar";
 import styles from "../../styles/Post.module.css";
 
@@ -60,7 +60,7 @@ const PostPage = ({
           </div>
         </div>
       </div>
-      <Footer></Footer>
+      <PostFooter></PostFooter>
     </div>
   );
 };

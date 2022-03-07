@@ -50,7 +50,7 @@ const Home = (props: HomePageProps) => {
 
         <div className={styles.grid}>
           {topics.map((topic) => (
-            <a href={`/`} className={styles.card}>
+            <div key={topic} className={styles.card}>
               <h2>{topic}</h2>
               <ul>
                 {props.posts
@@ -59,14 +59,12 @@ const Home = (props: HomePageProps) => {
                       post.metadata.topic === topic && post.metadata.level == 1
                   )
                   .map((post) => (
-                    <li>
-                      <a className="text-blue-400" href={`/${post.slug}`}>
-                        {post.metadata.title} &rarr;
-                      </a>
+                    <li key={topic + post.metadata.title}>
+                      <a href={`/${post.slug}`}>{post.metadata.title} &rarr;</a>
                     </li>
                   ))}
               </ul>
-            </a>
+            </div>
           ))}
         </div>
       </div>
