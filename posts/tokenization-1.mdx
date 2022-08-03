@@ -55,9 +55,12 @@ that text until it has 100,000 unique "subwords".
 
 <br />
 In effect, what happens is that BPE breaks words into components, like `walk` and
-`ing`. BPE can have trouble when there are multiple ways to encode a word, leading
+`ing`. The resulting tokens tend to be a natural way that we think of language, e.g.
+`surreptitiously` being broken down into `surrepti`, `tious`, and `ly`.{" "}
+
+However, BPE can have trouble when there are multiple ways to encode a word, leading
 to a single word being represented in different ways, which can be confusing for
-the model.
+the model. `Headspace` could be `Heads pace` or `Head space` for example.
 
 ## Strategy 2: WordPiece
 
@@ -67,7 +70,8 @@ WordPiece starts with letters, then begins to iteratively combine the letters in
 
 ## Strategy 3: SentencePiece
 
-Technically SentencePiece is not a tokenization algorithm; it is some extra features on top of common tokenization strategies like BPE. SentencePiece handles problems like "how do we avoid multiple ways to represent the same word" (subword regularization), and "how do we handle whitespaces."
+Technically SentencePiece is not a tokenization algorithm; it is some extra features on top of common tokenization strategies like BPE.
+SentencePiece handles problems like "how do we avoid multiple ways to represent the same word" (subword regularization), and "how do we handle whitespaces."
 
 ## Special Tokens
 
